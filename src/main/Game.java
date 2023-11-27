@@ -1,59 +1,51 @@
-package inputs;
+package main;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+public class Game implements Runnable {
 
-import main.GamePanel;
-
-public class MouseInputs implements MouseListener, MouseMotionListener {
-
+	private GameWindow gameWindow;
 	private GamePanel gamePanel;
+	private Thread gameThread;
+	private final int FPS_SET = 120;
 
-	public MouseInputs(GamePanel gamePanel) {
-		this.gamePanel = gamePanel;
-	}
+	public Game() {
 
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-//		gamePanel.setRectPos(e.getX(), e.getY());
+		gamePanel = new GamePanel();
+		gameWindow = new GameWindow(gamePanel);
+		gamePanel.requestFocus();
+		startGameLoop();
 
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-//		System.out.println("Mouse clicked!");
-		gamePanel.spawnRect(e.getX(),e.getY());
-
+	private void startGameLoop() {
+		gameThread = new Thread(this);
+		gameThread.start();
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+	public void run() {
 
-	}
+		double timePerFrame = 1000000000.0 / FPS_SET;
+		long lastFrame = System.nanoTime();
+		long now = System.nanoTime();
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+		int frames = 0;
+		long lastCheck = System.currentTimeMillis();
 
-	}
+		while (true) {
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+			now = System.nanoTime();
+			if (now - lastFrame >= timePerFrame) {
+				gamePanel.repaint();
+				lastFrame = now;
+				frames++;
+			}
 
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+			if (System.currentTimeMillis() - lastCheck >= 1000) {
+				lastCheck = System.currentTimeMillis();
+				System.out.println("FPS: " + frames);
+				frames = 0;
+			}
+		}
 
 	}
 
