@@ -12,9 +12,13 @@ import javax.swing.JPanel;
 
 import inputs.KeyboardInputs;
 import inputs.MouseInputs;
+import utils.LoadSave;
 
 import static utils.Constans.PlayerConstants.*;
 import static utils.Constans.Directions.*;
+import static main.Game.GAME_HEIGHT;
+import static main.Game.GAME_WIDTH;
+import levels.*;
 
 
 public class GamePanel extends JPanel {
@@ -23,10 +27,11 @@ public class GamePanel extends JPanel {
 	private float xDelta = 100, yDelta = 100;
 	private BufferedImage img;
 	private BufferedImage[][] animations;
-	private int aniTick, aniIndex, aniSpeed = 30;
+	private int aniTick, aniIndex, aniSpeed = 15;
 	private int playerAction = IDLE;
 	private int playerDir = -1;
 	private boolean moving = false;
+	private LevelManager levelManager;
 
 	public GamePanel() {
 		mouseInputs = new MouseInputs(this);
@@ -38,6 +43,8 @@ public class GamePanel extends JPanel {
 		addKeyListener(new KeyboardInputs(this));
 		addMouseListener(mouseInputs);
 		addMouseMotionListener(mouseInputs);
+		
+		levelManager = new LevelManager(this);
 
 	}
 
@@ -51,27 +58,16 @@ public class GamePanel extends JPanel {
 	}
 
 	private void importImg() {
-		InputStream is = getClass().getResourceAsStream("/Char/generic_char/png/blue/char_blue_1.png");	
-	
-		try {
-			img = ImageIO.read(is);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 	}
 
 	private void setPanelSize() {
 		// 56 x 40 = 2240 wide
 		// 56 x 25 = 1400 height
 		
-		Dimension size = new Dimension(2240,1400);
+		Dimension size = new Dimension(GAME_WIDTH,GAME_HEIGHT);
 		setPreferredSize(size);
+		System.out.println("size: " + GAME_WIDTH + " : " + GAME_HEIGHT);
 		
 	}
 
@@ -132,12 +128,7 @@ public class GamePanel extends JPanel {
 		
 		setAnimation();
 		updatePos();
-		
+		levelManager.draw(g);
 		g.drawImage(animations[playerAction][aniIndex], (int)xDelta, (int)yDelta, 118, 118,  null);
 	}
-
-	
-
-
-
 }
