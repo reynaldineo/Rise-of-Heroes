@@ -16,6 +16,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import utils.LoadSave;
+
 public class Player extends Entity {
 	private BufferedImage[][] animations;
 	private int aniTick, aniIndex, aniSpeed = 30;
@@ -100,23 +102,13 @@ public class Player extends Entity {
 	}
 	
 	private void loadAnimations() {
-		InputStream is = getClass().getResourceAsStream("/Char/generic_char/png/blue/char_blue_1.png");	
-		try {
-			BufferedImage img = ImageIO.read(is);
-			animations = new BufferedImage[11][8];
+		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+		animations = new BufferedImage[11][8];
 			
-			for(int j = 0; j < animations.length; j++)
-				for(int i = 0; i < animations[j].length; i++)
-					animations[j][i] = img.getSubimage(i*56, j*56, 56, 56);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		for(int j = 0; j < animations.length; j++)
+			for(int i = 0; i < animations[j].length; i++)
+				animations[j][i] = img.getSubimage(i*56, j*56, 56, 56);
+
 	}
 
 

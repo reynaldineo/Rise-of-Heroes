@@ -1,8 +1,9 @@
-/Background_IMG/
-/Char/
-/Enviroment/
-/hero.png
-/main/
-/inputs/
+/levels/
 /utils/
+/main/
 /entities/
+/Map/
+/inputs/
+/Enviroment/
+/Char/
+/Background_IMG/
