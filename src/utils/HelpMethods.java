@@ -12,9 +12,9 @@ public class HelpMethods {
 	}
 
 	private static boolean IsSolid(float x, float y, int[][] lvlData) {
-		if (x < 0 || x > Game.GAME_WIDTH)
+		if (x < 0 || x >= Game.GAME_WIDTH)
 			return false;
-		if (y < 0 || y > Game.GAME_HEIGHT)
+		if (y < 0 || y >= Game.GAME_HEIGHT)
 			return false;
 
 		float xIndex = x / Game.TILES_SIZE;
