@@ -16,7 +16,6 @@ public class LevelManager {
 	
 	public LevelManager(GamePanel gamePanel) {
 		this.gamePanel = gamePanel;
-//		levelSprite = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS);
 		levelOne = new Level();
 		importOutsideSprite();
 	}
@@ -63,4 +62,10 @@ public class LevelManager {
 		
 		
 	}
+	
+	public Level getCurrentLevel() {
+		return levelOne;
+	}
+	
+	
 }
