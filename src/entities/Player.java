@@ -24,7 +24,7 @@ public class Player extends Entity {
 	private int playerAction = IDLE;
 	private boolean moving = false, attacking = false;
 	private boolean left, up, right, down, jump;
-	private float playerSpeed = 3.0f;
+	private float playerSpeed = 2.0f;
 	private int[][] lvlData;
 	private float xDrawOffset = 39 * Game.SCALE;
 	private float yDrawOffset = 50 * Game.SCALE;
@@ -129,7 +129,6 @@ public class Player extends Entity {
 				updateXpos(xSpeed);
 			} else {
 				hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
-
 				if (airSpeed > 0)
 					resetInAir();
 				else
@@ -160,7 +159,6 @@ public class Player extends Entity {
 			hitbox.x += xSpeed;
 		else
 			hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
-
 	}
 
 	private void loadAnimations() {
