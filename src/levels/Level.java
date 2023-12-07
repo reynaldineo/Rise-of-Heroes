@@ -12,4 +12,8 @@ public class Level {
 		levelData = LoadSave.GetLevelData(LoadSave.LEVEL_ONE);
 		levelDataBG = LoadSave.GetLevelData(LoadSave.LEVEL_ONE_BACKGROUND);
 	}
+	
+	public int[][] getLevelData(){
+		return levelData;
+	}
 }
