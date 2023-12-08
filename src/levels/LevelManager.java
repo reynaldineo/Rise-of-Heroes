@@ -10,14 +10,15 @@ import utils.LoadSave;
 public class LevelManager {
 	
 	private GamePanel gamePanel;
+	private Game game;
 	private BufferedImage[] levelSprite;
 	private BufferedImage[] levelSpriteBackground;
 	private Level levelOne;
 	
-	public LevelManager(GamePanel gamePanel) {
-		this.gamePanel = gamePanel;
-		levelOne = new Level();
+	public LevelManager(Game game) {
+		this.game = game;
 		importOutsideSprite();
+		levelOne = new Level();
 	}
 	
 	private void importOutsideSprite() {
