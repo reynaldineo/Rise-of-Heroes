@@ -23,7 +23,7 @@ public abstract class Entity {
 
     }
 
-    protected void initHitbox(float x, float y, float width, float height) {
+    protected void initHitbox(float x, float y, int width, int height) {
         hitbox = new Rectangle2D.Float((int) x, (int) y, width , height);
     }
 
