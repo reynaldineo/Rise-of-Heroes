@@ -20,11 +20,13 @@ import utils.LoadSave;
 
 public class Player extends Entity {
 	private BufferedImage[][] animations;
+	private BufferedImage[][] animationsLeft;
 	private int aniTick, aniIndex, aniSpeed = 30;
 	private int playerAction = IDLE;
 	private boolean moving = false, attacking = false;
 	private boolean left, up, right, down, jump;
-	private float playerSpeed = 2.0f;
+	private boolean lastDir = true;
+	private float playerSpeed = 1.4f;
 	private int[][] lvlData;
 	private float xDrawOffset = 39 * Game.SCALE;
 	private float yDrawOffset = 50 * Game.SCALE;
@@ -39,7 +41,7 @@ public class Player extends Entity {
 	public Player(float x, float y, int width, int height) {
 		super(x, y, width, height);
 		loadAnimations();
-		initHitbox(x, y, 28 * Game.SCALE, 59 * Game.SCALE);
+		initHitbox(x, y, 28 * Game.SCALE, 55 * Game.SCALE);
 	}
 
 	public void update() {
@@ -49,9 +51,13 @@ public class Player extends Entity {
 	}
 
 	public void render(Graphics g) {
-		g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset),
+		if(lastDir)
+			g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset),
 				width, height, null);
-		 drawHitbox(g);
+		else
+			g.drawImage(animationsLeft[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset),
+					width, height, null);
+		drawHitbox(g);
 	}
 
 	private void updateAnimationTick() {
@@ -113,10 +119,14 @@ public class Player extends Entity {
 
 		float xSpeed = 0;
 
-		if (left)
+		if (left) {
 			xSpeed -= playerSpeed;
-		if (right)
+			lastDir = false;
+		}
+		if (right) {
 			xSpeed += playerSpeed;
+			lastDir = true;
+		}
 
 		if (!inAir)
 			if (!IsEntityOnFloor(hitbox, lvlData))
@@ -168,7 +178,14 @@ public class Player extends Entity {
 		for (int j = 0; j < animations.length; j++)
 			for (int i = 0; i < animations[j].length; i++)
 				animations[j][i] = img.getSubimage(i * 56, j * 56, 56, 56);
+		
+		 img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS_LEFT);
+		animationsLeft = new BufferedImage[11][8];
+		
 
+		for (int j = 0; j < animationsLeft.length; j++)
+			for (int i = 0; i < animationsLeft[j].length; i++)
+				animationsLeft[j][i] = img.getSubimage(i * 56, j * 56, 56, 56);
 	}
 
 	public void loadLevelData(int[][] lvlData) {
