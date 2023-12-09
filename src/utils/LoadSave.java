@@ -17,14 +17,13 @@ public class LoadSave {
 	public static final String PLAYER_ATLAS_LEFT = "Char/generic_char/png/blue/char_blue_1_reverse.png";
 	public static final String LEVEL_ATLAS = "Enviroment/CastleTiles.png";
 	public static final String LEVEL_ATLAS_BACKGROUND = "Background_IMG/Background_2.png";
-
 	public static final String MENU_BUTTONS = "Menu/button_atlas.png";
 	public static final String MENU_BACKGROUND = "Menu/menu_background.png";
-
 	// public static final String LEVEL_ONE = "LevelOne.txt";
 	public static final String LEVEL_ONE = "LevelOneLong.txt";
 	// public static final String LEVEL_ONE_BACKGROUND = "LevelOneBG.txt";
 	public static final String LEVEL_ONE_BACKGROUND = "LevelOneLongBG.txt";
+
 	public static BufferedImage GetSpriteAtlas(String fileName) {
 		BufferedImage img = null;
 		InputStream is = LoadSave.class.getResourceAsStream("/" + fileName);

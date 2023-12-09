@@ -25,8 +25,8 @@ public class Player extends Entity {
 	private int playerAction = IDLE;
 	private boolean moving = false, attacking = false;
 	private boolean left, up, right, down, jump;
-	private float playerSpeed = 1.0f * Game.SCALE;
 	private boolean lastDir = true;
+	private float playerSpeed = 1.4f * Game.SCALE;
 	private int[][] lvlData;
 	private float xDrawOffset = 39 * Game.SCALE;
 	private float yDrawOffset = 50 * Game.SCALE;
@@ -41,7 +41,7 @@ public class Player extends Entity {
 	public Player(float x, float y, int width, int height) {
 		super(x, y, width, height);
 		loadAnimations();
-		initHitbox(x, y, (int) (28 * Game.SCALE), (int) (59 * Game.SCALE));
+		initHitbox(x, y, (int) (28 * Game.SCALE), (int) (55 * Game.SCALE));
 
 	}
 
@@ -51,14 +51,16 @@ public class Player extends Entity {
 		updatePos();
 	}
 
-	public void render(Graphics g) {
-		if(lastDir)
-			g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset),
-				width, height, null);
-		else
-			g.drawImage(animationsLeft[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset),
+	public void render(Graphics g, int xLvlOffset) {
+		if (lastDir)
+			g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - xLvlOffset,
+					(int) (hitbox.y - yDrawOffset),
 					width, height, null);
-		drawHitbox(g);
+		else
+			g.drawImage(animationsLeft[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - xLvlOffset,
+					(int) (hitbox.y - yDrawOffset),
+					width, height, null);
+		// drawHitbox(g);
 	}
 
 	private void updateAnimationTick() {
@@ -114,9 +116,10 @@ public class Player extends Entity {
 
 		if (jump)
 			jump();
-		
-		if (!left && !right && !inAir)
-			return;
+
+		if (!inAir)
+			if ((!left && !right) || (left && right))
+				return;
 
 		float xSpeed = 0;
 
@@ -179,10 +182,9 @@ public class Player extends Entity {
 		for (int j = 0; j < animations.length; j++)
 			for (int i = 0; i < animations[j].length; i++)
 				animations[j][i] = img.getSubimage(i * 56, j * 56, 56, 56);
-		
-		 img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS_LEFT);
+
+		img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS_LEFT);
 		animationsLeft = new BufferedImage[11][8];
-		
 
 		for (int j = 0; j < animationsLeft.length; j++)
 			for (int i = 0; i < animationsLeft[j].length; i++)
