@@ -25,12 +25,8 @@ public class Player extends Entity {
 	private int playerAction = IDLE;
 	private boolean moving = false, attacking = false;
 	private boolean left, up, right, down, jump;
-<<<<<<< HEAD
 	private float playerSpeed = 1.0f * Game.SCALE;
-=======
 	private boolean lastDir = true;
-	private float playerSpeed = 1.4f;
->>>>>>> 91fc42b (Fead: Add Bigger Map and Add Some Left Animation)
 	private int[][] lvlData;
 	private float xDrawOffset = 39 * Game.SCALE;
 	private float yDrawOffset = 50 * Game.SCALE;
@@ -45,11 +41,8 @@ public class Player extends Entity {
 	public Player(float x, float y, int width, int height) {
 		super(x, y, width, height);
 		loadAnimations();
-<<<<<<< HEAD
 		initHitbox(x, y, (int) (28 * Game.SCALE), (int) (59 * Game.SCALE));
-=======
-		initHitbox(x, y, 28 * Game.SCALE, 55 * Game.SCALE);
->>>>>>> 91fc42b (Fead: Add Bigger Map and Add Some Left Animation)
+
 	}
 
 	public void update() {
