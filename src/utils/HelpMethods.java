@@ -13,13 +13,15 @@ public class HelpMethods {
 		return !IsSolid(x, y, lvlData) ||
 				!IsSolid(x + width, y, lvlData) ||
 				!IsSolid(x, y + height, lvlData) ||
-				!IsSolid(x, y + height/2, lvlData) ||
-				!IsSolid(x + width, y + height/2, lvlData) ||
+				!IsSolid(x, y + height / 2, lvlData) ||
+				!IsSolid(x + width, y + height / 2, lvlData) ||
 				!IsSolid(x + width, y + height, lvlData);
 	}
 
 	private static boolean IsSolid(float x, float y, int[][] lvlData) {
-		if (x < 0 || x >= Game.GAME_WIDTH)
+		int maxWidth = lvlData[0].length * Game.TILES_SIZE;
+		int maxHeight = lvlData.length * Game.TILES_SIZE;
+		if (x < 0 || x >= maxWidth)
 			return false;
 		if (y < 0 || y >= Game.GAME_HEIGHT)
 			return false;
@@ -49,7 +51,7 @@ public class HelpMethods {
 		int currentTile = (int) (hitbox.y / Game.TILES_SIZE);
 		if (airSpeed > 0) {
 			int tileYpos = currentTile * Game.TILES_SIZE;
-			int yOffset = (int) (Game.TILES_SIZE - hitbox.height/2);
+			int yOffset = (int) (Game.TILES_SIZE - hitbox.height / 2);
 			return tileYpos + yOffset + 4;
 		} else
 			return currentTile * Game.TILES_SIZE + 3;
@@ -57,10 +59,9 @@ public class HelpMethods {
 	}
 
 	public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, int[][] lvlData) {
-		System.out.println("1 " + IsSolid(hitbox.x, hitbox.y + hitbox.height + 1, lvlData));
-		System.out.println("2 " + IsSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height + 1, lvlData));
-		if (IsSolid(hitbox.x, hitbox.y + hitbox.height + 1, lvlData) && IsSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height + 1, lvlData))
-				return false;
+		if (IsSolid(hitbox.x, hitbox.y + hitbox.height + 1, lvlData)
+				&& IsSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height + 1, lvlData))
+			return false;
 		return true;
 	}
 }
