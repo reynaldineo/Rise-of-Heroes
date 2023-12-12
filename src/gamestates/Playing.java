@@ -1,5 +1,6 @@
 package gamestates;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -70,8 +71,11 @@ public class Playing extends State implements Statemethods {
 	public void draw(Graphics g) {
 		levelManager.draw(g, xLvlOffset);
 		player.render(g, xLvlOffset);
-		if (paused)
+		if (paused) {
+			g.setColor(new Color(0,0,0,140));
+			g.fillRect(0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
 			pausedOverlay.draw(g);
+		}
 	}
 
 	@Override
