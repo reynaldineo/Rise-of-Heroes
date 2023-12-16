@@ -3,6 +3,7 @@ package utils;
 import main.Game;
 
 public class Constans {
+	public static final float GRAVITY = 0.04f * Game.SCALE;
 
 	public static class UI {
 		public static class Buttons {
@@ -45,6 +46,7 @@ public class Constans {
 		public static final int ATTACK = 1;
 		public static final int RUNNING = 2;
 		public static final int JUMP = 3;
+
 		public static final int FALLING = 4;
 		public static final int DAMAGE = 5;
 		public static final int DEATH = 6;

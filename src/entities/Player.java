@@ -17,32 +17,30 @@ import javax.imageio.ImageIO;
 
 import main.Game;
 import utils.LoadSave;
+import static utils.Constans.GRAVITY;
 
 public class Player extends Entity {
 	private BufferedImage[][] animations;
 	private BufferedImage[][] animationsLeft;
-	private int aniTick, aniIndex, aniSpeed = 30;
-	private int playerAction = IDLE;
+
+	private int aniSpeed = 30;
 	private boolean moving = false, attacking = false;
-	private boolean left, up, right, down, jump;
+	private boolean left, right, jump;
 	private boolean lastDir = true;
-	private float playerSpeed = 1.4f * Game.SCALE;
 	private int[][] lvlData;
 	private float xDrawOffset = 39 * Game.SCALE;
 	private float yDrawOffset = 50 * Game.SCALE;
-	private boolean inAir = false;
 
 	// Jumping / Gravity
-	private float airSpeed = 0.0f;
-	private float gravity = 0.04f * Game.SCALE;
 	private float jumpSpeed = -2.25f * Game.SCALE;
 	private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
 
 	public Player(float x, float y, int width, int height) {
 		super(x, y, width, height);
 		loadAnimations();
-		initHitbox(x, y, (int) (28 * Game.SCALE), (int) (55 * Game.SCALE));
-
+		this.walkSpeed = 1.4f * Game.SCALE;
+		initHitbox(28, 55);
+		this.state = IDLE;
 	}
 
 	public void setSpawn(Point spawn) {
@@ -60,14 +58,13 @@ public class Player extends Entity {
 
 	public void render(Graphics g, int xLvlOffset) {
 		if (lastDir)
-			g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - xLvlOffset,
+			g.drawImage(animations[state][aniIndex], (int) (hitbox.x - xDrawOffset) - xLvlOffset,
 					(int) (hitbox.y - yDrawOffset),
 					width, height, null);
 		else
-			g.drawImage(animationsLeft[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - xLvlOffset,
+			g.drawImage(animationsLeft[state][aniIndex], (int) (hitbox.x - xDrawOffset) - xLvlOffset,
 					(int) (hitbox.y - yDrawOffset),
 					width, height, null);
-		// drawHitbox(g);
 	}
 
 	private void updateAnimationTick() {
@@ -76,7 +73,7 @@ public class Player extends Entity {
 		if (aniTick >= aniSpeed) {
 			aniTick = 0;
 			aniIndex++;
-			if (aniIndex >= GetSpriteAmount(playerAction)) {
+			if (aniIndex >= GetSpriteAmount(state)) {
 				aniIndex = 0;
 				attacking = false;
 			}
@@ -84,29 +81,29 @@ public class Player extends Entity {
 	}
 
 	private void setAnimation() {
-		int startAni = playerAction;
+		int startAni = state;
 
 		if (moving) {
-			playerAction = RUNNING;
+			state = RUNNING;
 			aniSpeed = 15;
 		} else {
-			playerAction = IDLE;
+			state = IDLE;
 			aniSpeed = 20;
 		}
 
 		if (inAir) {
 			if (airSpeed < 0)
-				playerAction = JUMP;
+				state = JUMP;
 			else
-				playerAction = FALLING;
+				state = FALLING;
 		}
 
 		if (attacking) {
-			playerAction = ATTACK;
+			state = ATTACK;
 			aniSpeed = 15;
 		}
 
-		if (startAni != playerAction) {
+		if (startAni != state) {
 			resetAni();
 		}
 
@@ -131,11 +128,11 @@ public class Player extends Entity {
 		float xSpeed = 0;
 
 		if (left) {
-			xSpeed -= playerSpeed;
+			xSpeed -= walkSpeed;
 			lastDir = false;
 		}
 		if (right) {
-			xSpeed += playerSpeed;
+			xSpeed += walkSpeed;
 			lastDir = true;
 		}
 
@@ -146,7 +143,7 @@ public class Player extends Entity {
 		if (inAir) {
 			if (!CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
 				hitbox.y += airSpeed;
-				airSpeed += gravity;
+				airSpeed += GRAVITY;
 				updateXpos(xSpeed);
 			} else {
 				hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
@@ -212,14 +209,6 @@ public class Player extends Entity {
 		this.left = left;
 	}
 
-	public boolean isUp() {
-		return up;
-	}
-
-	public void setUp(boolean up) {
-		this.up = up;
-	}
-
 	public boolean isRight() {
 		return right;
 	}
@@ -228,19 +217,10 @@ public class Player extends Entity {
 		this.right = right;
 	}
 
-	public boolean isDown() {
-		return down;
-	}
-
-	public void setDown(boolean down) {
-		this.down = down;
-	}
-
 	public void resetDirBooleans() {
 		left = false;
 		right = false;
-		up = false;
-		down = false;
+
 	}
 
 	public void setAttacking(Boolean attacking) {
@@ -256,7 +236,7 @@ public class Player extends Entity {
 		inAir = false;
 		attacking = false;
 		moving = false;
-		playerAction = IDLE;
+		state = IDLE;
 
 		hitbox.x = x;
 		hitbox.y = y;
