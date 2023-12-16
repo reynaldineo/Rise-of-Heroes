@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
+import ui.LevelCompletedOverlay;
 import ui.PausedOverlay;
 import utils.LoadSave;
 
@@ -16,7 +17,9 @@ public class Playing extends State implements Statemethods {
 	private Player player;
 	private LevelManager levelManager;
 	private PausedOverlay pausedOverlay;
+	private LevelCompletedOverlay levelCompletedOverlay;
 	private boolean paused = false;
+	private boolean lvlCompleted = false;
 
 	private int xLvlOffset;
 	private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
@@ -25,30 +28,68 @@ public class Playing extends State implements Statemethods {
 	private int maxTileOffset;
 	private int maxLvlOffsetX;
 
+	private int attackTick = 0;
+
 	public Playing(Game game) {
 		super(game);
 		initClasses();
+		calcLvlOffset();
+		loadStartLevel();
 	}
 
 	private void initClasses() {
 		levelManager = new LevelManager(game);
-		pausedOverlay = new PausedOverlay(this);
-		player = new Player(300, 300, (int) (110 * Game.SCALE), (int) (110 * Game.SCALE));
+
+		player = new Player(200, 300, (int) (110 * Game.SCALE), (int) (110 * Game.SCALE));
 		player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
-		lvlTileWide = levelManager.getCurrentLevel().getLevelData()[0].length;
-		maxTileOffset = lvlTileWide - Game.TILES_IN_WIDTH;
-		maxLvlOffsetX = maxTileOffset * Game.TILES_SIZE;
+		player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+
+		pausedOverlay = new PausedOverlay(this);
+		levelCompletedOverlay = new LevelCompletedOverlay(this);
 	}
 
 	@Override
 	public void update() {
-		if (!paused) {
+		if (paused)
+			pausedOverlay.update();
+		else if (lvlCompleted)
+			levelCompletedOverlay.update();
+		else {
 			levelManager.update();
 			player.update();
 			checkCloseToBorder();
-		} else
-			pausedOverlay.update();
+		}
 
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		levelManager.draw(g, xLvlOffset);
+		player.render(g, xLvlOffset);
+		if (paused) {
+			g.setColor(new Color(0, 0, 0, 140));
+			g.fillRect(0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
+			pausedOverlay.draw(g);
+		} else if (lvlCompleted) {
+			g.setColor(new Color(0, 0, 0, 140));
+			g.fillRect(0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
+			levelCompletedOverlay.draw(g);
+		}
+	}
+
+	public void loadNextLevel() {
+		resetAll();
+		levelManager.loadNextLevel();
+		player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+		calcLvlOffset();
+	}
+
+	private void loadStartLevel() {
+
+	}
+
+	private void calcLvlOffset() {
+		maxLvlOffsetX = levelManager.getCurrentLevel().getMaxLvlOffsetX();
 	}
 
 	private void checkCloseToBorder() {
@@ -68,20 +109,14 @@ public class Playing extends State implements Statemethods {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		levelManager.draw(g, xLvlOffset);
-		player.render(g, xLvlOffset);
-		if (paused) {
-			g.setColor(new Color(0,0,0,140));
-			g.fillRect(0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
-			pausedOverlay.draw(g);
-		}
-	}
-
-	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			player.setAttacking(true);
+			attackTick++;
+			if (attackTick >= 7) {
+				attackTick = 0;
+				lvlCompleted = true;
+			}
 		}
 
 	}
@@ -89,28 +124,32 @@ public class Playing extends State implements Statemethods {
 	public void mouseDragged(MouseEvent e) {
 		if (paused)
 			pausedOverlay.mouseDragged(e);
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (paused) {
+		if (paused)
 			pausedOverlay.mousePressed(e);
-		}
+		else if (lvlCompleted)
+			levelCompletedOverlay.mousePressed(e);
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (paused) {
+		if (paused)
 			pausedOverlay.mouseReleased(e);
-		}
+		else if (lvlCompleted)
+			levelCompletedOverlay.mouseReleased(e);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (paused) {
+		if (paused)
 			pausedOverlay.mouseMoved(e);
-		}
+		else if (lvlCompleted)
+			levelCompletedOverlay.mouseMoved(e);
 
 	}
 
@@ -158,8 +197,14 @@ public class Playing extends State implements Statemethods {
 
 	}
 
+	public void resetAll() {
+		unpauseGame();
+		lvlCompleted = false;
+		player.resetAll();
+	}
+
 	public void windowFocusLost() {
-		player.resetDirBoooleands();
+		player.resetDirBooleans();
 	}
 
 	public Player getPlayer() {

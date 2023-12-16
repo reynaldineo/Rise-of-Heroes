@@ -15,10 +15,14 @@ public class LoadSave {
 
 	public static final String PLAYER_ATLAS = "Char/generic_char/png/blue/char_blue_1.png";
 	public static final String PLAYER_ATLAS_LEFT = "Char/generic_char/png/blue/char_blue_1_reverse.png";
-	public static final String LEVEL_ATLAS = "Enviroment/CastleTiles.png";
-	public static final String LEVEL_ATLAS_BACKGROUND = "Background_IMG/Background_2.png";
+	public static final String LEVEL_ATLAS_0 = "Enviroment/CastleTiles.png";
+	public static final String LEVEL_ATLAS_0_BACKGROUND = "Background_IMG/Background_2.png";
+	public static final String LEVEL_ATLAS_1 = "Enviroment/TX_Ground.png";
+	public static final String LEVEL_ATLAS_1_BACKGROUND = "Enviroment/TX_Props.png";
 	public static final String LEVEL_ONE = "LevelOneLong.txt";
 	public static final String LEVEL_ONE_BACKGROUND = "LevelOneLongBG.txt";
+	public static final String LEVEL_TWO = "LevelTwoLong.txt";
+	public static final String LEVEL_TWO_BACKGROUND = "LevelTwoLongBG.txt";
 	public static final String MENU_BUTTONS = "Menu/button_atlas.png";
 	public static final String MENU_BACKGROUND = "Menu/menu_background.png";
 	public static final String MENU_BACKGROUND_PICTURE = "Menu/Summer7.png";
@@ -26,6 +30,7 @@ public class LoadSave {
 	public static final String SOUND_BUTTONS = "Menu/sound_button.png";
 	public static final String URM_BUTTONS = "Menu/urm_buttons.png";
 	public static final String VOLUME_BUTTONS = "Menu/volume_buttons.png";
+	public static final String COMPLETED_IMG = "Menu/completed_sprite.png";
 
 	public static BufferedImage GetSpriteAtlas(String fileName) {
 		BufferedImage img = null;

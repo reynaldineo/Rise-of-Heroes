@@ -1,7 +1,9 @@
 package utils;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 import javax.sound.midi.Receiver;
 
@@ -31,7 +33,7 @@ public class HelpMethods {
 
 		int value = lvlData[(int) yIndex][(int) xIndex];
 
-		if (value >= 56 || value < 0 || value == 15 || value == 38 || value == 31)
+		if (value >= 256 || value < 0 || value == 15 || value == 38 || value == 31)
 			return true;
 		return false;
 	}
@@ -63,5 +65,15 @@ public class HelpMethods {
 				&& IsSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height + 1, lvlData))
 			return false;
 		return true;
+	}
+
+	public static Point GetPlayerSpawn(int[][] lvlData) {
+		for (int j = 0; j < lvlData.length; j++)
+			for (int i = 0; i < lvlData[0].length; i++)
+				if (lvlData[j][i] == -2)
+					return new Point(i * Game.TILES_SIZE, j * Game.TILES_SIZE);
+
+		return new Point(200 * Game.TILES_SIZE, 300 * Game.TILES_SIZE);
+
 	}
 }

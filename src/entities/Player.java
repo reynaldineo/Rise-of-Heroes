@@ -4,11 +4,11 @@ import static utils.Constans.Directions.DOWN;
 import static utils.Constans.Directions.LEFT;
 import static utils.Constans.Directions.RIGHT;
 import static utils.Constans.Directions.UP;
-import static utils.Constans.PlayerConstants.GetSpriteAmount;
 import static utils.Constans.PlayerConstants.*;
 import static utils.HelpMethods.*;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +43,13 @@ public class Player extends Entity {
 		loadAnimations();
 		initHitbox(x, y, (int) (28 * Game.SCALE), (int) (55 * Game.SCALE));
 
+	}
+
+	public void setSpawn(Point spawn) {
+		this.x = spawn.x;
+		this.y = spawn.y;
+		hitbox.x = x;
+		hitbox.y = y;
 	}
 
 	public void update() {
@@ -229,7 +236,7 @@ public class Player extends Entity {
 		this.down = down;
 	}
 
-	public void resetDirBoooleands() {
+	public void resetDirBooleans() {
 		left = false;
 		right = false;
 		up = false;
@@ -242,6 +249,20 @@ public class Player extends Entity {
 
 	public void setJump(Boolean jump) {
 		this.jump = jump;
+	}
+
+	public void resetAll() {
+		resetDirBooleans();
+		inAir = false;
+		attacking = false;
+		moving = false;
+		playerAction = IDLE;
+
+		hitbox.x = x;
+		hitbox.y = y;
+
+		if (!IsEntityOnFloor(hitbox, lvlData))
+			inAir = true;
 	}
 
 }
