@@ -10,7 +10,7 @@ import main.Game;
 public abstract class Entity {
     protected float x, y;
     protected int width, height;
-    protected Rectangle2D.Float hitbox;
+    protected Rectangle2D.Float hitbox, attackBox;
     protected int aniTick, aniIndex;
     protected int state;
     protected float airSpeed;
@@ -22,6 +22,11 @@ public abstract class Entity {
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+
+    protected void drawAttackBox(Graphics g, int xLvlOffset) {
+        g.setColor(Color.red);
+        g.drawRect((int) (attackBox.x - xLvlOffset), (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
     }
 
     protected void drawHitbox(Graphics g) {

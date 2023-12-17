@@ -41,7 +41,8 @@ public class LevelManager {
 		}
 		for (int j = 0; j < Game.TILES_IN_HEIGHT; j++) {
 			for (int i = 0; i < currentLevel.getLevelData()[0].length; i++) {
-				if (currentLevel.levelData[j][i] == -1 || currentLevel.levelData[j][i] == -2)
+				if (currentLevel.levelData[j][i] == -1 || currentLevel.levelData[j][i] == -2
+						|| currentLevel.levelData[j][i] == -5)
 					continue;
 				g.drawImage(currentLevel.levelSprite[currentLevel.levelData[j][i]],
 						Game.TILES_SIZE * i - xLvlOffset,
@@ -64,6 +65,7 @@ public class LevelManager {
 		}
 		setCurrentLevel();
 		game.getPlaying().getPlayer().loadLevelData(currentLevel.getLevelData());
+		game.getPlaying().getObjectManager().loadObjects(currentLevel);
 	}
 
 	private void buildAllLevels() {

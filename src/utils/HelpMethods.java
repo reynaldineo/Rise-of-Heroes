@@ -4,10 +4,12 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
-import javax.sound.midi.Receiver;
+import java.util.ArrayList;
+import java.util.Random;
 
 import main.Game;
+import objects.GameContainer;
+import objects.Potion;
 
 public class HelpMethods {
 
@@ -75,5 +77,33 @@ public class HelpMethods {
 
 		return new Point(200 * Game.TILES_SIZE, 300 * Game.TILES_SIZE);
 
+	}
+
+	public static ArrayList<Potion> getPotions(int[][] lvlData) {
+		ArrayList<Potion> potions = new ArrayList<>();
+
+		for (int j = 0; j < lvlData.length; j++) {
+			for (int i = 0; i < lvlData[0].length; i++) {
+				if (lvlData[j][i] == -5) {
+					Random rand = new Random();
+					potions.add(new Potion(i * Game.TILES_SIZE, j * Game.TILES_SIZE, rand.nextInt(3)));
+				}
+			}
+		}
+		return potions;
+	}
+
+	public static ArrayList<GameContainer> getContainers(int[][] lvlData) {
+		ArrayList<GameContainer> containers = new ArrayList<>();
+
+		for (int j = 0; j < lvlData.length; j++) {
+			for (int i = 0; i < lvlData[0].length; i++) {
+				if (lvlData[j][i] == -5) {
+					Random rand = new Random();
+					containers.add(new GameContainer(i * Game.TILES_SIZE, j * Game.TILES_SIZE, rand.nextInt(2) + 4));
+				}
+			}
+		}
+		return containers;
 	}
 }

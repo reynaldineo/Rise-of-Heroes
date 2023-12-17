@@ -9,12 +9,14 @@ import static utils.HelpMethods.*;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import gamestates.Playing;
 import main.Game;
 import utils.LoadSave;
 import static utils.Constans.GRAVITY;
@@ -22,6 +24,7 @@ import static utils.Constans.GRAVITY;
 public class Player extends Entity {
 	private BufferedImage[][] animations;
 	private BufferedImage[][] animationsLeft;
+	private Playing playing;
 
 	private int aniSpeed = 30;
 	private boolean moving = false, attacking = false;
@@ -35,12 +38,20 @@ public class Player extends Entity {
 	private float jumpSpeed = -2.25f * Game.SCALE;
 	private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
 
-	public Player(float x, float y, int width, int height) {
+	private boolean attackChecked;
+
+	public Player(float x, float y, int width, int height, Playing playing) {
 		super(x, y, width, height);
-		loadAnimations();
+		this.playing = playing;
 		this.walkSpeed = 1.4f * Game.SCALE;
-		initHitbox(28, 55);
 		this.state = IDLE;
+		loadAnimations();
+		initHitbox(28, 55);
+		initAttackBox();
+	}
+
+	private void initAttackBox() {
+		attackBox = new Rectangle2D.Float(x, y, (int) (20 * Game.SCALE), (int) (20 * Game.SCALE));
 	}
 
 	public void setSpawn(Point spawn) {
@@ -51,9 +62,40 @@ public class Player extends Entity {
 	}
 
 	public void update() {
+		updateAttackBox();
+
+		updatePos();
+
+		if (moving)
+			checkPotionTouched();
+
+		if (attacking)
+			checkAttack();
+
 		updateAnimationTick();
 		setAnimation();
-		updatePos();
+	}
+
+	private void checkAttack() {
+		if (attackChecked || aniIndex != 1)
+			return;
+		attackChecked = true;
+		// playing.checkEnemyHit(attackBox);
+		playing.checkObjectHit(attackBox);
+	}
+
+	private void updateAttackBox() {
+		if (right)
+			attackBox.x = hitbox.x + hitbox.width + (int) (Game.SCALE * 10);
+		else if (left)
+			attackBox.x = hitbox.x - hitbox.width - (int) (Game.SCALE * 10);
+
+		attackBox.y = hitbox.y + (Game.SCALE * 10);
+	}
+
+	private void checkPotionTouched() {
+		playing.checkPotionTouched(hitbox);
+
 	}
 
 	public void render(Graphics g, int xLvlOffset) {
@@ -76,6 +118,7 @@ public class Player extends Entity {
 			if (aniIndex >= GetSpriteAmount(state)) {
 				aniIndex = 0;
 				attacking = false;
+				attackChecked = false;
 			}
 		}
 	}
@@ -100,7 +143,11 @@ public class Player extends Entity {
 
 		if (attacking) {
 			state = ATTACK;
-			aniSpeed = 15;
+			if (startAni != ATTACK) {
+				aniIndex = 1;
+				aniTick = 0;
+				return;
+			}
 		}
 
 		if (startAni != state) {
@@ -243,6 +290,20 @@ public class Player extends Entity {
 
 		if (!IsEntityOnFloor(hitbox, lvlData))
 			inAir = true;
+	}
+
+	public void changeHealth(int value) {
+		// currentHealth += value;
+
+		// if(currentHealth > maxHealth)
+		// currentHealth = maxHealth;
+		// else if(currentHealth < 0)
+		// currentHealth = 0;
+
+	}
+
+	public void changePower(int bluePotionValue) {
+		System.out.println("changePower");
 	}
 
 }

@@ -4,8 +4,13 @@ import static utils.HelpMethods.GetPlayerSpawn;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Random;
 
 import main.Game;
+import objects.Potion;
+import objects.GameContainer;
 import utils.LoadSave;
 import utils.HelpMethods;
 
@@ -14,6 +19,8 @@ public class Level {
 	public int[][] levelData;
 	public int[][] levelDataBG;
 	public int levelNow;
+	private ArrayList<Potion> potions;
+	private ArrayList<GameContainer> containers;
 
 	public BufferedImage[] levelSprite;
 	public BufferedImage[] levelSpriteBackground;
@@ -28,8 +35,18 @@ public class Level {
 		this.levelNow = levelNow;
 		getData();
 		importSprite();
+		createPotions();
+		createContainers();
 		calcLvlOffsets();
 		calcPlayerSpawn();
+	}
+
+	private void createContainers() {
+		containers = HelpMethods.getContainers(levelData);
+	}
+
+	private void createPotions() {
+		potions = new ArrayList<>();
 	}
 
 	private void calcPlayerSpawn() {
@@ -75,6 +92,22 @@ public class Level {
 		}
 	}
 
+	public void printLevel() {
+		System.out.println(levelNow);
+		for (int j = 0; j < levelData.length; j++) {
+			// This will print the row number
+			System.out.print("Row " + j + ": ");
+
+			for (int i = 0; i < levelData[j].length; i++) {
+				// This will print each element in the row followed by a space
+				System.out.print(levelData[j][i] + " ");
+			}
+
+			// This will move to the next line after printing all elements in a row
+			System.out.println();
+		}
+	}
+
 	private void importSprite() {
 
 		for (int j = 0; j < img.getHeight() / 32; j++) {
@@ -115,5 +148,13 @@ public class Level {
 
 	public Point getPlayerSpawn() {
 		return playerSpawn;
+	}
+
+	public ArrayList<Potion> getPotions() {
+		return potions;
+	}
+
+	public ArrayList<GameContainer> getContainers() {
+		return containers;
 	}
 }
