@@ -4,10 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Float;
 
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
+import objects.ObjectManager;
 import ui.LevelCompletedOverlay;
 import ui.PausedOverlay;
 import utils.LoadSave;
@@ -16,6 +19,7 @@ public class Playing extends State implements Statemethods {
 
 	private Player player;
 	private LevelManager levelManager;
+	private ObjectManager objectManager;
 	private PausedOverlay pausedOverlay;
 	private LevelCompletedOverlay levelCompletedOverlay;
 	private boolean paused = false;
@@ -38,9 +42,11 @@ public class Playing extends State implements Statemethods {
 	}
 
 	private void initClasses() {
-		levelManager = new LevelManager(game);
 
-		player = new Player(200, 300, (int) (110 * Game.SCALE), (int) (110 * Game.SCALE));
+		levelManager = new LevelManager(game);
+		objectManager = new ObjectManager(this);
+
+		player = new Player(200, 300, (int) (110 * Game.SCALE), (int) (110 * Game.SCALE), this);
 		player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
 		player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
 
@@ -56,6 +62,7 @@ public class Playing extends State implements Statemethods {
 			levelCompletedOverlay.update();
 		else {
 			levelManager.update();
+			objectManager.update();
 			player.update();
 			checkCloseToBorder();
 		}
@@ -66,6 +73,7 @@ public class Playing extends State implements Statemethods {
 	public void draw(Graphics g) {
 		levelManager.draw(g, xLvlOffset);
 		player.render(g, xLvlOffset);
+		objectManager.draw(g, xLvlOffset);
 		if (paused) {
 			g.setColor(new Color(0, 0, 0, 140));
 			g.fillRect(0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
@@ -85,7 +93,7 @@ public class Playing extends State implements Statemethods {
 	}
 
 	private void loadStartLevel() {
-
+		objectManager.loadObjects(levelManager.getCurrentLevel());
 	}
 
 	private void calcLvlOffset() {
@@ -106,6 +114,10 @@ public class Playing extends State implements Statemethods {
 		else if (xLvlOffset < 0)
 			xLvlOffset = 0;
 
+	}
+
+	public void checkPotionTouched(Rectangle2D.Float hitbox) {
+		objectManager.checkObjectTouched(hitbox);
 	}
 
 	@Override
@@ -201,6 +213,7 @@ public class Playing extends State implements Statemethods {
 		unpauseGame();
 		lvlCompleted = false;
 		player.resetAll();
+		objectManager.resetAll();
 	}
 
 	public void windowFocusLost() {
@@ -213,6 +226,14 @@ public class Playing extends State implements Statemethods {
 
 	public void unpauseGame() {
 		paused = false;
+	}
+
+	public ObjectManager getObjectManager() {
+		return objectManager;
+	}
+
+	public void checkObjectHit(Rectangle2D.Float attackBox) {
+		objectManager.checkObjectHit(attackBox);
 	}
 
 }

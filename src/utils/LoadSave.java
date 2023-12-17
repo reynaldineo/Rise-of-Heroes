@@ -31,6 +31,9 @@ public class LoadSave {
 	public static final String URM_BUTTONS = "Menu/urm_buttons.png";
 	public static final String VOLUME_BUTTONS = "Menu/volume_buttons.png";
 	public static final String COMPLETED_IMG = "Menu/completed_sprite.png";
+	public static final String OBJECT = "Object/object.png";
+	public static final String CHEST = "Object/chest_sprites.png";
+	public static final String CONTAINER = "Object/objects_sprites.png";
 
 	public static BufferedImage GetSpriteAtlas(String fileName) {
 		BufferedImage img = null;

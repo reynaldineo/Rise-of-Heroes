@@ -5,6 +5,41 @@ import main.Game;
 public class Constans {
 	public static final float GRAVITY = 0.04f * Game.SCALE;
 
+	public static class ObjectConstants {
+
+		public static final int RED_POTION = 0;
+		public static final int BLUE_POTION = 1;
+		public static final int APPLE = 2;
+		public static final int BARREL = 4;
+		public static final int BOX = 5;
+		public static final int CHEST = 6;
+
+		public static final int RED_POTION_VALUE = 15;
+		public static final int BLUE_POTION_VALUE = 10;
+
+		public static final int CONTAINER_WIDTH_DEFAULT = 60;
+		public static final int CONTAINER_HEIGHT_DEFAULT = 45;
+		public static final int CONTAINER_WIDTH = (int) (Game.SCALE * CONTAINER_WIDTH_DEFAULT);
+		public static final int CONTAINER_HEIGHT = (int) (Game.SCALE * CONTAINER_HEIGHT_DEFAULT);
+
+		public static final int POTION_WIDTH_DEFAULT = 32;
+		public static final int POTION_HEIGHT_DEFAULT = 32;
+		public static final int POTION_WIDTH = (int) (Game.SCALE * POTION_WIDTH_DEFAULT);
+		public static final int POTION_HEIGHT = (int) (Game.SCALE * POTION_HEIGHT_DEFAULT);
+
+		public static int GetSpriteAmount(int object_type) {
+			switch (object_type) {
+				case CHEST:
+					return 7;
+				case BARREL, BOX:
+					return 8;
+				default:
+					return 0;
+
+			}
+		}
+	}
+
 	public static class UI {
 		public static class Buttons {
 			public static final int B_WIDTH_DEFAULT = 140;
