@@ -10,6 +10,7 @@ import java.util.Random;
 import main.Game;
 import objects.GameContainer;
 import objects.Potion;
+import objects.Spike;
 
 public class HelpMethods {
 
@@ -105,5 +106,19 @@ public class HelpMethods {
 			}
 		}
 		return containers;
+	}
+
+	public static ArrayList<Spike> getSpikes(int[][] levelData) {
+		ArrayList<Spike> spikes = new ArrayList<>();
+
+		for (int j = 0; j < levelData.length; j++) {
+			for (int i = 0; i < levelData[0].length; i++) {
+				if (levelData[j][i] == 31) {
+					spikes.add(new Spike(i * Game.TILES_SIZE, j * Game.TILES_SIZE, 7));
+				}
+			}
+		}
+
+		return spikes;
 	}
 }

@@ -10,6 +10,7 @@ import java.util.Random;
 
 import main.Game;
 import objects.Potion;
+import objects.Spike;
 import objects.GameContainer;
 import utils.LoadSave;
 import utils.HelpMethods;
@@ -19,8 +20,10 @@ public class Level {
 	public int[][] levelData;
 	public int[][] levelDataBG;
 	public int levelNow;
+
 	private ArrayList<Potion> potions;
 	private ArrayList<GameContainer> containers;
+	private ArrayList<Spike> spikes;
 
 	public BufferedImage[] levelSprite;
 	public BufferedImage[] levelSpriteBackground;
@@ -37,8 +40,13 @@ public class Level {
 		importSprite();
 		createPotions();
 		createContainers();
+		createSpikes();
 		calcLvlOffsets();
 		calcPlayerSpawn();
+	}
+
+	private void createSpikes() {
+		spikes = HelpMethods.getSpikes(levelData);
 	}
 
 	private void createContainers() {
@@ -156,5 +164,9 @@ public class Level {
 
 	public ArrayList<GameContainer> getContainers() {
 		return containers;
+	}
+
+	public ArrayList<Spike> getSpikes() {
+		return spikes;
 	}
 }

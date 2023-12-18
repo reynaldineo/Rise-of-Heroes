@@ -12,16 +12,36 @@ import static utils.Constans.ObjectConstants.*;
 
 public class ObjectManager {
 
+    private long lastCallTime = 0;
+
     private Playing playing;
     private BufferedImage[][] containerImg, chestImg, potionImg;
     private ArrayList<Potion> potions;
     private ArrayList<GameContainer> containers;
+    private ArrayList<Spike> spikes;
 
     public ObjectManager(Playing playing) {
         this.playing = playing;
         potions = new ArrayList<>();
         containers = new ArrayList<>();
+        spikes = new ArrayList<>();
         loadImgs();
+    }
+
+    public void checkSpikesTouched(Rectangle2D.Float hitbox) {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastCallTime < 1500) {
+            return;
+        }
+        lastCallTime = currentTime;
+
+        if (spikes != null)
+            for (Spike s : spikes)
+                if (s.getHitbox().intersects(hitbox)) {
+                    playing.getPlayer().changeHealth(-10);
+                    System.out.println("spike hit");
+                    return;
+                }
     }
 
     public void checkObjectTouched(Rectangle2D.Float hitbox) {
@@ -45,7 +65,7 @@ public class ObjectManager {
     public void checkObjectHit(Rectangle2D.Float attackbox) {
         if (containers != null)
             for (GameContainer gc : containers)
-                if (gc.isActive())
+                if (gc.isActive() && !gc.doAnimation)
                     if (attackbox.intersects(gc.getHitbox())) {
                         gc.setAnimation(true);
                         int type = 0;
@@ -58,8 +78,9 @@ public class ObjectManager {
     }
 
     public void loadObjects(Level currentLevel) {
-        potions = currentLevel.getPotions();
-        containers = currentLevel.getContainers();
+        potions = new ArrayList<>(currentLevel.getPotions());
+        containers = new ArrayList<>(currentLevel.getContainers());
+        spikes = currentLevel.getSpikes();
     }
 
     public void loadImgs() {
@@ -94,7 +115,15 @@ public class ObjectManager {
     public void draw(Graphics g, int xLvlOffset) {
         drawPotions(g, xLvlOffset);
         drawContainers(g, xLvlOffset);
+        // drawTraps(g, xLvlOffset);
+    }
 
+    private void drawTraps(Graphics g, int xLvlOffset) {
+        if (spikes != null)
+            for (Spike s : spikes) {
+                s.drawHitbox(g);
+                System.out.println("drawn");
+            }
     }
 
     private void drawContainers(Graphics g, int xLvlOffset) {
@@ -112,7 +141,7 @@ public class ObjectManager {
                         CONTAINER_WIDTH,
                         CONTAINER_HEIGHT,
                         null);
-//                gc.drawHitbox(g);
+                // gc.drawHitbox(g);
             }
     }
 
@@ -143,11 +172,12 @@ public class ObjectManager {
                                 POTION_HEIGHT,
                                 null);
                     }
-//                    p.drawHitbox(g);
+                    // p.drawHitbox(g);
                 }
     }
 
     public void resetAll() {
+        loadObjects(playing.getLevelManager().getCurrentLevel());
         if (potions != null)
             for (Potion p : potions)
                 p.reset();
