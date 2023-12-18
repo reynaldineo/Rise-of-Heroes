@@ -31,6 +31,7 @@ public class Playing extends State implements Statemethods {
 	private boolean paused = false;
 	private boolean lvlCompleted = false;
 	private boolean inventoryOpen = false;
+	private boolean playerDying;
 
 	private int xLvlOffset;
 	private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
@@ -74,12 +75,15 @@ public class Playing extends State implements Statemethods {
 			objectManager.update();
 			player.update();
 			checkCloseToBorder();
-		} else if (lvlCompleted)
+		} else if (lvlCompleted) {
 			levelCompletedOverlay.update();
-		else if (inventoryOpen) {
+		} else if (inventoryOpen) {
 			inventoryOverlay.update();
-		}
-		else {
+		} else if (gameOver) {
+			gameOverOverlay.update();
+		} else if (playerDying) {
+			player.update();
+		} else {
 			pausedOverlay.update();
 		}
 
@@ -168,38 +172,42 @@ public class Playing extends State implements Statemethods {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (!gameOver)
+		if (!gameOver) {
 			if (paused)
 				pausedOverlay.mousePressed(e);
 			else if (lvlCompleted)
 				levelCompletedOverlay.mousePressed(e);
 			else if (inventoryOpen)
 				inventoryOverlay.mousePressed(e);
+		} else
+			gameOverOverlay.mousePressed(e);
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (!gameOver)
-
+		if (!gameOver) {
 			if (paused)
 				pausedOverlay.mouseReleased(e);
 			else if (lvlCompleted)
 				levelCompletedOverlay.mouseReleased(e);
 			else if (inventoryOpen)
 				inventoryOverlay.mouseReleased(e);
+		} else
+			gameOverOverlay.mouseReleased(e);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (!gameOver)
+		if (!gameOver) {
 			if (paused)
 				pausedOverlay.mouseMoved(e);
 			else if (lvlCompleted)
 				levelCompletedOverlay.mouseMoved(e);
 			else if (inventoryOpen)
 				inventoryOverlay.mouseMoved(e);
-
+		} else
+			gameOverOverlay.mouseMoved(e);
 	}
 
 	@Override
@@ -253,19 +261,16 @@ public class Playing extends State implements Statemethods {
 
 	}
 
-	public void resetAllEnemy() {
-		gameOver = false;
-		paused = false;
-		player.resetAll();
-		enemyManager.resetAllEnemies();
-	}
-
 	public void resetAll() {
 		unpauseGame();
+		gameOver = false;
+		paused = false;
 		lvlCompleted = false;
 		inventoryOpen = false;
+		playerDying = false;
 		player.resetAll();
 		objectManager.resetAll();
+		enemyManager.resetAllEnemies();
 	}
 
 	public void setGameOver(boolean gameOver) {
@@ -306,6 +311,10 @@ public class Playing extends State implements Statemethods {
 
 	public LevelManager getLevelManager() {
 		return levelManager;
+	}
+
+	public void setPlayerDying(boolean playerDying) {
+		this.playerDying = playerDying;
 	}
 
 	public void addItemToInventory(int objType) {
