@@ -43,7 +43,7 @@ public class PausedButton {
         this.width = width;
     }
 
-    public int getHetght() {
+    public int getHeight() {
         return height;
     }
 
