@@ -34,6 +34,7 @@ public class LoadSave {
 	public static final String OBJECT = "Object/object.png";
 	public static final String CHEST = "Object/chest_sprites.png";
 	public static final String CONTAINER = "Object/objects_sprites.png";
+	public static final String CRABBY_SPRITE = "Enemy/crabby_sprite.png";
 	public static final String INVENTORY_IMG = "Menu/inventory.png";
 	public static final String ITEM = "Object/item.png";
 	public static final String ITEM_CLICKED = "Object/item_clicked.png";

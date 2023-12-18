@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
+import entities.Crabby;
 import main.Game;
 import objects.Potion;
 import objects.Spike;
@@ -24,6 +25,7 @@ public class Level {
 	private ArrayList<Potion> potions;
 	private ArrayList<GameContainer> containers;
 	private ArrayList<Spike> spikes;
+	private ArrayList<Crabby> crabby;
 
 	public BufferedImage[] levelSprite;
 	public BufferedImage[] levelSpriteBackground;
@@ -43,10 +45,15 @@ public class Level {
 		createSpikes();
 		calcLvlOffsets();
 		calcPlayerSpawn();
+		createCrabby();
 	}
 
 	private void createSpikes() {
 		spikes = HelpMethods.getSpikes(levelData);
+	}
+
+	private void createCrabby() {
+		crabby = HelpMethods.getCrabs(levelData);
 	}
 
 	private void createContainers() {
@@ -168,5 +175,9 @@ public class Level {
 
 	public ArrayList<Spike> getSpikes() {
 		return spikes;
+	}
+
+	public ArrayList<Crabby> getCrabby() {
+		return crabby;
 	}
 }
