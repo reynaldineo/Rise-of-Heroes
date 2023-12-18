@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
+import entities.Crabby;
 import main.Game;
 import objects.GameContainer;
 import objects.Potion;
@@ -121,4 +122,15 @@ public class HelpMethods {
 
 		return spikes;
 	}
+
+	public static ArrayList<Crabby> getCrabs(int[][] levelData) {
+		ArrayList<Crabby> crab = new ArrayList<>();
+		for (int j = 0; j < levelData.length; j++)
+			for (int i = 0; i < levelData[0].length; i++) {
+				if (levelData[j][i] == -3)
+					crab.add(new Crabby(i * Game.TILES_SIZE, j * Game.TILES_SIZE));
+			}
+		return crab;
+	}
+
 }

@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Float;
 
+import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
@@ -20,6 +21,7 @@ public class Playing extends State implements Statemethods {
 
 	private Player player;
 	private LevelManager levelManager;
+	private EnemyManager enemyManager;
 	private ObjectManager objectManager;
 	private PausedOverlay pausedOverlay;
 	private InventoryOverlay inventoryOverlay;
@@ -47,6 +49,7 @@ public class Playing extends State implements Statemethods {
 	private void initClasses() {
 
 		levelManager = new LevelManager(game);
+		enemyManager = new EnemyManager(this);
 		objectManager = new ObjectManager(this);
 
 		player = new Player(200, 300, (int) (110 * Game.SCALE), (int) (110 * Game.SCALE), this);
@@ -68,6 +71,7 @@ public class Playing extends State implements Statemethods {
 			inventoryOverlay.update();
 		} else {
 			levelManager.update();
+			enemyManager.update();
 			objectManager.update();
 			player.update();
 			checkCloseToBorder();
@@ -79,6 +83,7 @@ public class Playing extends State implements Statemethods {
 	public void draw(Graphics g) {
 		levelManager.draw(g, xLvlOffset);
 		player.render(g, xLvlOffset);
+		enemyManager.draw(g, xLvlOffset);
 		objectManager.draw(g, xLvlOffset);
 		if (paused) {
 			g.setColor(new Color(0, 0, 0, 140));
@@ -104,6 +109,8 @@ public class Playing extends State implements Statemethods {
 
 	private void loadStartLevel() {
 		objectManager.loadObjects(levelManager.getCurrentLevel());
+		enemyManager.loadEnemy(levelManager.getCurrentLevel());
+
 	}
 
 	private void calcLvlOffset() {
@@ -252,6 +259,10 @@ public class Playing extends State implements Statemethods {
 
 	public ObjectManager getObjectManager() {
 		return objectManager;
+	}
+
+	public EnemyManager getEnemyManager() {
+		return enemyManager;
 	}
 
 	public void checkObjectHit(Rectangle2D.Float attackBox) {
