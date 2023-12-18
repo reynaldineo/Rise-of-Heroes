@@ -12,6 +12,7 @@ import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import objects.ObjectManager;
+import ui.GameOverOverlay;
 import ui.InventoryOverlay;
 import ui.LevelCompletedOverlay;
 import ui.PausedOverlay;
@@ -24,6 +25,7 @@ public class Playing extends State implements Statemethods {
 	private EnemyManager enemyManager;
 	private ObjectManager objectManager;
 	private PausedOverlay pausedOverlay;
+	private GameOverOverlay gameOverOverlay;
 	private InventoryOverlay inventoryOverlay;
 	private LevelCompletedOverlay levelCompletedOverlay;
 	private boolean paused = false;
@@ -38,6 +40,8 @@ public class Playing extends State implements Statemethods {
 	private int maxLvlOffsetX;
 
 	private int attackTick = 0;
+
+	private boolean gameOver;
 
 	public Playing(Game game) {
 		super(game);
@@ -58,23 +62,25 @@ public class Playing extends State implements Statemethods {
 
 		pausedOverlay = new PausedOverlay(this);
 		levelCompletedOverlay = new LevelCompletedOverlay(this);
+		gameOverOverlay = new GameOverOverlay(this);
 		inventoryOverlay = new InventoryOverlay(this);
 	}
 
 	@Override
 	public void update() {
-		if (paused)
-			pausedOverlay.update();
-		else if (lvlCompleted)
-			levelCompletedOverlay.update();
-		else if (inventoryOpen) {
-			inventoryOverlay.update();
-		} else {
+		if (!paused && !gameOver) {
 			levelManager.update();
 			enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
 			objectManager.update();
 			player.update();
 			checkCloseToBorder();
+		} else if (lvlCompleted)
+			levelCompletedOverlay.update();
+		else if (inventoryOpen) {
+			inventoryOverlay.update();
+		}
+		else {
+			pausedOverlay.update();
 		}
 
 	}
@@ -89,6 +95,8 @@ public class Playing extends State implements Statemethods {
 			g.setColor(new Color(0, 0, 0, 140));
 			g.fillRect(0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
 			pausedOverlay.draw(g);
+		} else if (gameOver) {
+			gameOverOverlay.draw(g);
 		} else if (lvlCompleted) {
 			g.setColor(new Color(0, 0, 0, 140));
 			g.fillRect(0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
@@ -139,81 +147,90 @@ public class Playing extends State implements Statemethods {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			player.setAttacking(true);
-			attackTick++;
-			if (attackTick >= 12) {
-				attackTick = 0;
-				lvlCompleted = true;
+		if (!gameOver)
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				player.setAttacking(true);
+				attackTick++;
+				if (attackTick >= 12) {
+					attackTick = 0;
+					lvlCompleted = true;
+				}
 			}
-		}
 
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		if (paused)
-			pausedOverlay.mouseDragged(e);
+		if (!gameOver)
+			if (paused)
+				pausedOverlay.mouseDragged(e);
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (paused)
-			pausedOverlay.mousePressed(e);
-		else if (lvlCompleted)
-			levelCompletedOverlay.mousePressed(e);
-		else if (inventoryOpen)
-			inventoryOverlay.mousePressed(e);
+		if (!gameOver)
+			if (paused)
+				pausedOverlay.mousePressed(e);
+			else if (lvlCompleted)
+				levelCompletedOverlay.mousePressed(e);
+			else if (inventoryOpen)
+				inventoryOverlay.mousePressed(e);
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (paused)
-			pausedOverlay.mouseReleased(e);
-		else if (lvlCompleted)
-			levelCompletedOverlay.mouseReleased(e);
-		else if (inventoryOpen)
-			inventoryOverlay.mouseReleased(e);
+		if (!gameOver)
+
+			if (paused)
+				pausedOverlay.mouseReleased(e);
+			else if (lvlCompleted)
+				levelCompletedOverlay.mouseReleased(e);
+			else if (inventoryOpen)
+				inventoryOverlay.mouseReleased(e);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (paused)
-			pausedOverlay.mouseMoved(e);
-		else if (lvlCompleted)
-			levelCompletedOverlay.mouseMoved(e);
-		else if (inventoryOpen)
-			inventoryOverlay.mouseMoved(e);
+		if (!gameOver)
+			if (paused)
+				pausedOverlay.mouseMoved(e);
+			else if (lvlCompleted)
+				levelCompletedOverlay.mouseMoved(e);
+			else if (inventoryOpen)
+				inventoryOverlay.mouseMoved(e);
 
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		switch (e.getKeyCode()) {
-			case KeyEvent.VK_A:
-				player.setLeft(true);
+		if (gameOver)
+			gameOverOverlay.keyPressed(e);
+		else
+			switch (e.getKeyCode()) {
+				case KeyEvent.VK_A:
+					player.setLeft(true);
+					break;
+				case KeyEvent.VK_D:
+					player.setRight(true);
+					break;
+				case KeyEvent.VK_SPACE:
+					player.setJump(true);
+					break;
+				case KeyEvent.VK_W:
+					player.setJump(true);
+					break;
+				case KeyEvent.VK_BACK_SPACE:
+					Gamestate.state = Gamestate.MENU;
+					break;
+				case KeyEvent.VK_ESCAPE:
+					paused = !paused;
+					inventoryOpen = false;
 				break;
-			case KeyEvent.VK_D:
-				player.setRight(true);
+				case KeyEvent.VK_I:
+					inventoryOpen = !inventoryOpen;
 				break;
-			case KeyEvent.VK_SPACE:
-				player.setJump(true);
-				break;
-			case KeyEvent.VK_W:
-				player.setJump(true);
-				break;
-			case KeyEvent.VK_BACK_SPACE:
-				Gamestate.state = Gamestate.MENU;
-				break;
-			case KeyEvent.VK_ESCAPE:
-				paused = !paused;
-				inventoryOpen = false;
-				break;
-			case KeyEvent.VK_I:
-				inventoryOpen = !inventoryOpen;
-				break;
-		}
+			}
 
 	}
 
@@ -236,13 +253,27 @@ public class Playing extends State implements Statemethods {
 
 	}
 
+	public void resetAllEnemy() {
+		gameOver = false;
+		paused = false;
+		player.resetAll();
+		enemyManager.resetAllEnemies();
+	}
+
 	public void resetAll() {
 		unpauseGame();
 		lvlCompleted = false;
 		inventoryOpen = false;
 		player.resetAll();
 		objectManager.resetAll();
+	}
 
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+
+	public void checkEnemyHit(Rectangle2D.Float attackBox) {
+		enemyManager.checkEnemyHit(attackBox);
 	}
 
 	public void windowFocusLost() {
