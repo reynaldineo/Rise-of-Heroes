@@ -11,6 +11,7 @@ import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import objects.ObjectManager;
+import ui.InventoryOverlay;
 import ui.LevelCompletedOverlay;
 import ui.PausedOverlay;
 import utils.LoadSave;
@@ -21,9 +22,11 @@ public class Playing extends State implements Statemethods {
 	private LevelManager levelManager;
 	private ObjectManager objectManager;
 	private PausedOverlay pausedOverlay;
+	private InventoryOverlay inventoryOverlay;
 	private LevelCompletedOverlay levelCompletedOverlay;
 	private boolean paused = false;
 	private boolean lvlCompleted = false;
+	private boolean inventoryOpen = false;
 
 	private int xLvlOffset;
 	private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
@@ -52,6 +55,7 @@ public class Playing extends State implements Statemethods {
 
 		pausedOverlay = new PausedOverlay(this);
 		levelCompletedOverlay = new LevelCompletedOverlay(this);
+		inventoryOverlay = new InventoryOverlay(this);
 	}
 
 	@Override
@@ -60,7 +64,9 @@ public class Playing extends State implements Statemethods {
 			pausedOverlay.update();
 		else if (lvlCompleted)
 			levelCompletedOverlay.update();
-		else {
+		else if (inventoryOpen) {
+			inventoryOverlay.update();
+		} else {
 			levelManager.update();
 			objectManager.update();
 			player.update();
@@ -82,6 +88,10 @@ public class Playing extends State implements Statemethods {
 			g.setColor(new Color(0, 0, 0, 140));
 			g.fillRect(0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
 			levelCompletedOverlay.draw(g);
+		} else if (inventoryOpen) {
+			g.setColor(new Color(0, 0, 0, 140));
+			g.fillRect(0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
+			inventoryOverlay.draw(g);
 		}
 	}
 
@@ -125,7 +135,7 @@ public class Playing extends State implements Statemethods {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			player.setAttacking(true);
 			attackTick++;
-			if (attackTick >= 7) {
+			if (attackTick >= 12) {
 				attackTick = 0;
 				lvlCompleted = true;
 			}
@@ -145,6 +155,8 @@ public class Playing extends State implements Statemethods {
 			pausedOverlay.mousePressed(e);
 		else if (lvlCompleted)
 			levelCompletedOverlay.mousePressed(e);
+		else if (inventoryOpen)
+			inventoryOverlay.mousePressed(e);
 
 	}
 
@@ -154,6 +166,8 @@ public class Playing extends State implements Statemethods {
 			pausedOverlay.mouseReleased(e);
 		else if (lvlCompleted)
 			levelCompletedOverlay.mouseReleased(e);
+		else if (inventoryOpen)
+			inventoryOverlay.mouseReleased(e);
 	}
 
 	@Override
@@ -162,6 +176,8 @@ public class Playing extends State implements Statemethods {
 			pausedOverlay.mouseMoved(e);
 		else if (lvlCompleted)
 			levelCompletedOverlay.mouseMoved(e);
+		else if (inventoryOpen)
+			inventoryOverlay.mouseMoved(e);
 
 	}
 
@@ -185,6 +201,10 @@ public class Playing extends State implements Statemethods {
 				break;
 			case KeyEvent.VK_ESCAPE:
 				paused = !paused;
+				inventoryOpen = false;
+				break;
+			case KeyEvent.VK_I:
+				inventoryOpen = !inventoryOpen;
 				break;
 		}
 
@@ -212,8 +232,10 @@ public class Playing extends State implements Statemethods {
 	public void resetAll() {
 		unpauseGame();
 		lvlCompleted = false;
+		inventoryOpen = false;
 		player.resetAll();
 		objectManager.resetAll();
+
 	}
 
 	public void windowFocusLost() {
@@ -242,6 +264,14 @@ public class Playing extends State implements Statemethods {
 
 	public LevelManager getLevelManager() {
 		return levelManager;
+	}
+
+	public void addItemToInventory(int objType) {
+		inventoryOverlay.addItem(objType);
+	}
+
+	public void setInventoryOpen(Boolean b) {
+		this.inventoryOpen = b;
 	}
 
 }

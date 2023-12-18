@@ -124,8 +124,10 @@ public class PausedOverlay {
             if (replayB.isMousePressed())
                 System.out.println("replay lvl");
         } else if (isIn(e, unpauseB)) {
-            if (unpauseB.isMousePressed())
-                playing.unpauseGame();
+            if (unpauseB.isMousePressed()) {
+            	playing.unpauseGame();
+            	playing.setInventoryOpen(false);
+            }
         }
 
         musicButton.resetBools();

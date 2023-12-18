@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 import gamestates.Playing;
 import levels.Level;
@@ -50,7 +51,7 @@ public class ObjectManager {
                 if (p.isActive())
                     if (hitbox.intersects(p.getHitbox())) {
                         p.setActive(false);
-                        applyEffectToPlkayer(p);
+                        playing.addItemToInventory(p.getObjType());
                     }
     }
 
@@ -68,11 +69,9 @@ public class ObjectManager {
                 if (gc.isActive() && !gc.doAnimation)
                     if (attackbox.intersects(gc.getHitbox())) {
                         gc.setAnimation(true);
-                        int type = 0;
-                        if (gc.getObjType() == BARREL)
-                            type = 1;
-                        potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2),
-                                (int) (gc.getHitbox().y - gc.getHitbox().height / 2), type));
+                        Random rand = new Random();
+                        potions.add(new Potion((int) (gc.getHitbox().x + gc.getHitbox().width / 2) - 15,
+                                (int) (gc.getHitbox().y - gc.getHitbox().height / 2) + 7, rand.nextInt(3)));
 
                     }
     }
