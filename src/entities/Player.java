@@ -1,9 +1,6 @@
 package entities;
 
-import static utils.Constans.Directions.DOWN;
-import static utils.Constans.Directions.LEFT;
-import static utils.Constans.Directions.RIGHT;
-import static utils.Constans.Directions.UP;
+import static utils.Constans.EnemyConstants.DEAD;
 import static utils.Constans.PlayerConstants.*;
 import static utils.HelpMethods.*;
 
@@ -12,10 +9,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
 
 import gamestates.Playing;
 import main.Game;
@@ -85,7 +78,17 @@ public class Player extends Entity {
 		updateHealthBar();
 
 		if (currentHealth <= 0) {
-			playing.setGameOver(true);
+
+			if (state != DEAD) {
+				state = DEAD;
+				aniTick = 0;
+				aniIndex = 0;
+				playing.setPlayerDying(true);
+			} else if (aniIndex == GetSpriteAmount(DEAD) - 1 && aniTick >= aniSpeed - 1) {
+				playing.setGameOver(true);
+			} else
+				updateAnimationTick();
+
 			return;
 		}
 
