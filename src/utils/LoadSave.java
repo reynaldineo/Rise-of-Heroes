@@ -41,6 +41,7 @@ public class LoadSave {
 	public static final String ITEM_INFO = "Object/object.png";
 	public static final String USE_BUTTON = "Menu/use_button.png";
 	public static final String USE_BUTTON_HOVER = "Menu/use_button_hover.png";
+	public static final String STATUS_BAR = "Char/health_power_bar.png";
 
 	public static BufferedImage GetSpriteAtlas(String fileName) {
 		BufferedImage img = null;
