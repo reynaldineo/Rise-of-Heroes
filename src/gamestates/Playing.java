@@ -71,7 +71,7 @@ public class Playing extends State implements Statemethods {
 			inventoryOverlay.update();
 		} else {
 			levelManager.update();
-			enemyManager.update();
+			enemyManager.update(levelManager.getCurrentLevel().getLevelData());
 			objectManager.update();
 			player.update();
 			checkCloseToBorder();
