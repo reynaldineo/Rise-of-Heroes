@@ -236,4 +236,12 @@ public class Playing extends State implements Statemethods {
 		objectManager.checkObjectHit(attackBox);
 	}
 
+	public void checkSpikeTouched(Float hitbox) {
+		objectManager.checkSpikesTouched(hitbox);
+	}
+
+	public LevelManager getLevelManager() {
+		return levelManager;
+	}
+
 }

@@ -13,6 +13,7 @@ public class Constans {
 		public static final int BARREL = 4;
 		public static final int BOX = 5;
 		public static final int CHEST = 6;
+		public static final int SPIKE = 7;
 
 		public static final int RED_POTION_VALUE = 15;
 		public static final int BLUE_POTION_VALUE = 10;
@@ -26,6 +27,11 @@ public class Constans {
 		public static final int POTION_HEIGHT_DEFAULT = 32;
 		public static final int POTION_WIDTH = (int) (Game.SCALE * POTION_WIDTH_DEFAULT);
 		public static final int POTION_HEIGHT = (int) (Game.SCALE * POTION_HEIGHT_DEFAULT);
+
+		public static final int SPIKE_WIDTH_DEFAULT = 32;
+		public static final int SPIKE_HEIGHT_DEFAULT = 24;
+		public static final int SPIKE_WIDTH = (int) (Game.SCALE * SPIKE_WIDTH_DEFAULT);
+		public static final int SPIKE_HEIGHT = (int) (Game.SCALE * SPIKE_HEIGHT_DEFAULT);
 
 		public static int GetSpriteAmount(int object_type) {
 			switch (object_type) {
