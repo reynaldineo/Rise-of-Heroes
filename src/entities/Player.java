@@ -355,6 +355,7 @@ public class Player extends Entity {
 
 	public void changeHealth(int value) {
 		currentHealth += value;
+		updateHealthBar();
 
 		if (currentHealth <= 0)
 			currentHealth = 0;

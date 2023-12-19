@@ -31,7 +31,7 @@ public class ObjectManager {
 
     public void checkSpikesTouched(Rectangle2D.Float hitbox) {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastCallTime < 1500) {
+        if (currentTime - lastCallTime < 50) {
             return;
         }
         lastCallTime = currentTime;
@@ -39,7 +39,7 @@ public class ObjectManager {
         if (spikes != null)
             for (Spike s : spikes)
                 if (s.getHitbox().intersects(hitbox)) {
-                    playing.getPlayer().changeHealth(-25);
+                    playing.getPlayer().changeHealth(-5);
                     System.out.println("spike hit");
                     return;
                 }
