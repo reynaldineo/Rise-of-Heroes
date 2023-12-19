@@ -69,13 +69,8 @@ public class Playing extends State implements Statemethods {
 
 	@Override
 	public void update() {
-		if (!paused && !gameOver) {
-			levelManager.update();
-			enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
-			objectManager.update();
-			player.update();
-			checkCloseToBorder();
-		} else if (lvlCompleted) {
+
+		if (lvlCompleted) {
 			levelCompletedOverlay.update();
 		} else if (inventoryOpen) {
 			inventoryOverlay.update();
@@ -83,8 +78,14 @@ public class Playing extends State implements Statemethods {
 			gameOverOverlay.update();
 		} else if (playerDying) {
 			player.update();
-		} else {
+		} else if (paused) {
 			pausedOverlay.update();
+		} else {
+			levelManager.update();
+			enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
+			objectManager.update();
+			player.update();
+			checkCloseToBorder();
 		}
 
 	}
@@ -271,6 +272,7 @@ public class Playing extends State implements Statemethods {
 		player.resetAll();
 		objectManager.resetAll();
 		enemyManager.resetAllEnemies();
+		levelManager.resetAll();
 	}
 
 	public void setGameOver(boolean gameOver) {
@@ -323,6 +325,11 @@ public class Playing extends State implements Statemethods {
 
 	public void setInventoryOpen(Boolean b) {
 		this.inventoryOpen = b;
+	}
+
+	public void setLevelCompleted(boolean b) {
+		this.lvlCompleted = true;
+
 	}
 
 }

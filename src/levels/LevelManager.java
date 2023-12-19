@@ -100,4 +100,9 @@ public class LevelManager {
 		return levels.size();
 	}
 
+	public void resetAll() {
+		buildAllLevels();
+		setCurrentLevel();
+	}
+
 }
