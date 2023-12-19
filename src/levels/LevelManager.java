@@ -17,7 +17,7 @@ public class LevelManager {
 	private BufferedImage[] levelSpriteBackground;
 	private Level currentLevel;
 	private ArrayList<Level> levels;
-	private int lvlIndex = 1;
+	private int lvlIndex = 0;
 	private int maxLvl = 1;
 
 	public LevelManager(Game game) {
