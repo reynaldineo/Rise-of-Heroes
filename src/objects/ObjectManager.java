@@ -39,7 +39,7 @@ public class ObjectManager {
         if (spikes != null)
             for (Spike s : spikes)
                 if (s.getHitbox().intersects(hitbox)) {
-                    playing.getPlayer().changeHealth(-10);
+                    playing.getPlayer().changeHealth(-25);
                     System.out.println("spike hit");
                     return;
                 }

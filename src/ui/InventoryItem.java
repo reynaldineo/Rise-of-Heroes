@@ -157,7 +157,7 @@ public class InventoryItem {
                 break;
             case BLUE_POTION:
                 System.out.println("Blue Potion");
-                playing.getPlayer().changePower(10 + (rand.nextInt(3) + 5));
+                playing.getPlayer().changePower(10 + (rand.nextInt(2) + 5));
                 break;
             case APPLE:
                 System.out.println("Apple");

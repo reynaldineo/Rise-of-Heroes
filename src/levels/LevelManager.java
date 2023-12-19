@@ -17,7 +17,7 @@ public class LevelManager {
 	private BufferedImage[] levelSpriteBackground;
 	private Level currentLevel;
 	private ArrayList<Level> levels;
-	private int lvlIndex = 0;
+	private int lvlIndex = 1;
 	private int maxLvl = 1;
 
 	public LevelManager(Game game) {
@@ -29,6 +29,18 @@ public class LevelManager {
 	}
 
 	public void draw(Graphics g, int xLvlOffset) {
+
+		for (int j = 0; j < Game.TILES_IN_HEIGHT; j++) {
+			for (int i = 0; i < currentLevel.getLevelDataBG2()[0].length; i++) {
+				if (currentLevel.levelDataBG2[j][i] == -1) {
+					continue;
+				}
+				g.drawImage(currentLevel.levelSpriteBackground2[currentLevel.levelDataBG2[j][i]],
+						Game.TILES_SIZE * i - xLvlOffset,
+						Game.TILES_SIZE * j,
+						Game.TILES_SIZE, Game.TILES_SIZE, null);
+			}
+		}
 		for (int j = 0; j < Game.TILES_IN_HEIGHT; j++) {
 			for (int i = 0; i < currentLevel.getLevelDataBG()[0].length; i++) {
 				if (currentLevel.levelDataBG[j][i] == -1)

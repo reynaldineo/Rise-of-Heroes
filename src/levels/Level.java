@@ -20,6 +20,7 @@ public class Level {
 
 	public int[][] levelData;
 	public int[][] levelDataBG;
+	public int[][] levelDataBG2;
 	public int levelNow;
 
 	private ArrayList<Potion> potions;
@@ -29,7 +30,8 @@ public class Level {
 
 	public BufferedImage[] levelSprite;
 	public BufferedImage[] levelSpriteBackground;
-	private BufferedImage img, imgBG;
+	public BufferedImage[] levelSpriteBackground2;
+	private BufferedImage img, imgBG, imgBG2;
 	private Point playerSpawn;
 
 	private int lvlTileWide;
@@ -49,7 +51,14 @@ public class Level {
 	}
 
 	private void createSpikes() {
-		spikes = HelpMethods.getSpikes(levelData);
+		switch (levelNow) {
+			case 0:
+				spikes = HelpMethods.getSpikes(levelData,levelNow);
+				break;
+			case 1:
+				spikes = HelpMethods.getSpikes(levelDataBG, levelNow);
+				break;
+		}
 	}
 
 	private void createCrabby() {
@@ -82,26 +91,34 @@ public class Level {
 			case 0:
 				levelData = LoadSave.GetLevelData(LoadSave.LEVEL_ONE);
 				levelDataBG = LoadSave.GetLevelData(LoadSave.LEVEL_ONE_BACKGROUND);
+				levelDataBG2 = LoadSave.GetLevelData(LoadSave.LEVEL_ONE_BACKGROUND_2);
 				img = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_0);
-				imgBG = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_0_BACKGROUND);
+				imgBG = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_0);
+				imgBG2 = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_0_BACKGROUND);
 				levelSprite = new BufferedImage[56];
-				levelSpriteBackground = new BufferedImage[120];
+				levelSpriteBackground = new BufferedImage[56];
+				levelSpriteBackground2 = new BufferedImage[120];
 				break;
 			case 1:
 				levelData = LoadSave.GetLevelData(LoadSave.LEVEL_TWO);
 				levelDataBG = LoadSave.GetLevelData(LoadSave.LEVEL_TWO_BACKGROUND);
+				levelDataBG2 = LoadSave.GetLevelData(LoadSave.LEVEL_TWO_BACKGROUND_2);
 				img = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_1);
 				imgBG = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_1_BACKGROUND);
+				imgBG2 = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_0_BACKGROUND);
 				levelSprite = new BufferedImage[256];
 				levelSpriteBackground = new BufferedImage[1024];
+				levelSpriteBackground2 = new BufferedImage[120];
 				break;
 			default:
 				levelData = LoadSave.GetLevelData(LoadSave.LEVEL_ONE);
 				levelDataBG = LoadSave.GetLevelData(LoadSave.LEVEL_ONE_BACKGROUND);
 				img = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_0);
 				imgBG = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_0_BACKGROUND);
+				imgBG2 = LoadSave.GetSpriteAtlas(LoadSave.LEVEL_ATLAS_0_BACKGROUND);
 				levelSprite = new BufferedImage[56];
 				levelSpriteBackground = new BufferedImage[120];
+				levelSpriteBackground2 = new BufferedImage[120];
 				break;
 
 		}
@@ -110,15 +127,12 @@ public class Level {
 	public void printLevel() {
 		System.out.println(levelNow);
 		for (int j = 0; j < levelData.length; j++) {
-			// This will print the row number
 			System.out.print("Row " + j + ": ");
 
 			for (int i = 0; i < levelData[j].length; i++) {
-				// This will print each element in the row followed by a space
 				System.out.print(levelData[j][i] + " ");
 			}
 
-			// This will move to the next line after printing all elements in a row
 			System.out.println();
 		}
 	}
@@ -139,6 +153,13 @@ public class Level {
 			}
 		}
 
+		for (int j = 0; j < imgBG2.getHeight() / 32; j++) {
+			for (int i = 0; i < imgBG2.getWidth() / 32; i++) {
+				int index = j * (imgBG2.getWidth() / 32) + i;
+				levelSpriteBackground2[index] = imgBG2.getSubimage(i * 32, j * 32, 32, 32);
+			}
+		}
+
 	}
 
 	public int[][] getLevelData() {
@@ -147,6 +168,10 @@ public class Level {
 
 	public int[][] getLevelDataBG() {
 		return levelDataBG;
+	}
+
+	public int[][] getLevelDataBG2() {
+		return levelDataBG2;
 	}
 
 	public int getLvlTileWide() {

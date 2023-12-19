@@ -28,9 +28,9 @@ public class InventoryOverlay {
         this.playing = playing;
         initImg();
         initInventory();
-        addItem(RED_POTION);
-        addItem(BLUE_POTION);
-        addItem(APPLE);
+//        addItem(RED_POTION);
+//        addItem(BLUE_POTION);
+//        addItem(APPLE);
 
     }
 

@@ -21,8 +21,10 @@ public class LoadSave {
 	public static final String LEVEL_ATLAS_1_BACKGROUND = "Enviroment/TX_Props.png";
 	public static final String LEVEL_ONE = "LevelOneLong.txt";
 	public static final String LEVEL_ONE_BACKGROUND = "LevelOneLongBG.txt";
+	public static final String LEVEL_ONE_BACKGROUND_2 = "LevelOneLongBG2.txt";
 	public static final String LEVEL_TWO = "LevelTwoLong.txt";
 	public static final String LEVEL_TWO_BACKGROUND = "LevelTwoLongBG.txt";
+	public static final String LEVEL_TWO_BACKGROUND_2 = "LevelTwoLongBG2.txt";
 	public static final String MENU_BUTTONS = "Menu/button_atlas.png";
 	public static final String MENU_BACKGROUND = "Menu/menu_background.png";
 	public static final String MENU_BACKGROUND_PICTURE = "Menu/Summer7.png";

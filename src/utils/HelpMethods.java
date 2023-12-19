@@ -113,12 +113,22 @@ public class HelpMethods {
 		return containers;
 	}
 
-	public static ArrayList<Spike> getSpikes(int[][] levelData) {
+	public static ArrayList<Spike> getSpikes(int[][] levelData, int level) {
+		int k =0;
+		switch (level) {
+		case 0:
+			k = 31;
+			break;
+
+		case 1:
+			k = 121;
+			break;
+		}
 		ArrayList<Spike> spikes = new ArrayList<>();
 
 		for (int j = 0; j < levelData.length; j++) {
 			for (int i = 0; i < levelData[0].length; i++) {
-				if (levelData[j][i] == 31) {
+				if (levelData[j][i] == k) {
 					spikes.add(new Spike(i * Game.TILES_SIZE, j * Game.TILES_SIZE, 7));
 				}
 			}
