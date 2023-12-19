@@ -158,7 +158,8 @@ public class Playing extends State implements Statemethods {
 				if (attackTick >= 7) {
 					attackTick = 0;
 				}
-			}
+			} else if (e.getButton() == MouseEvent.BUTTON3)
+				player.powerAttack();
 
 	}
 

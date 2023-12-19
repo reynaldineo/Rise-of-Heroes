@@ -14,6 +14,8 @@ import gamestates.Playing;
 import main.Game;
 import utils.LoadSave;
 import static utils.Constans.GRAVITY;
+import static utils.Constans.Directions.LEFT;
+import static utils.Constans.Directions.RIGHT;
 
 public class Player extends Entity {
 	private BufferedImage[][] animations;
@@ -51,6 +53,19 @@ public class Player extends Entity {
 	private int currentHealth = maxHealth;
 	private int healthWidth = healthBarWidth;
 
+	private int powerBarWidth = (int) (104 * Game.SCALE);
+	private int powerBarHeight = (int) (2 * Game.SCALE);
+	private int powerBarXStart = (int) (44 * Game.SCALE);
+	private int powerBarYStart = (int) (34 * Game.SCALE);
+	private int powerWidth = powerBarWidth;
+	private int powerMaxValue = 200;
+	private int powerValue = powerMaxValue;
+
+	private boolean powerAttackActive;
+	private int powerAttackTick;
+	private int powerGrowSpeed = 15;
+	private int powerGrowTick;
+
 	private Rectangle2D.Float attackBox;
 
 	public Player(float x, float y, int width, int height, Playing playing) {
@@ -77,6 +92,7 @@ public class Player extends Entity {
 
 	public void update() {
 		updateHealthBar();
+		updatePowerBar();
 
 		if (currentHealth <= 0) {
 
@@ -99,10 +115,17 @@ public class Player extends Entity {
 
 		if (moving) {
 			checkPotionTouched();
+			if (powerAttackActive) {
+				powerAttackTick++;
+				if (powerAttackTick >= 35) {
+					powerAttackTick = 0;
+					powerAttackActive = false;
+				}
+			}
 		}
 		checkSpikesTouched();
 
-		if (attacking)
+		if (attacking || powerAttackActive)
 			checkAttack();
 
 		updateAnimationTick();
@@ -113,6 +136,16 @@ public class Player extends Entity {
 		healthWidth = (int) ((currentHealth / (float) maxHealth) * healthBarWidth);
 	}
 
+	private void updatePowerBar() {
+		powerWidth = (int) ((powerValue / (float) powerMaxValue) * powerBarWidth);
+
+		powerGrowTick++;
+		if (powerGrowTick >= powerGrowSpeed) {
+			powerGrowTick = 0;
+			changePower(1);
+		}
+	}
+
 	private void checkSpikesTouched() {
 		playing.checkSpikeTouched(hitbox);
 	}
@@ -121,6 +154,10 @@ public class Player extends Entity {
 		if (attackChecked || aniIndex != 1)
 			return;
 		attackChecked = true;
+
+		if (powerAttackActive)
+			attackChecked = false;
+
 		// playing.checkEnemyHit(attackBox);
 		playing.checkObjectHit(attackBox);
 		playing.checkEnemyHit(attackBox);
@@ -163,12 +200,15 @@ public class Player extends Entity {
 
 	private void drawUI(Graphics g) {
 		g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
+
 		g.setColor(Color.red);
 		g.fillRect(healthBarXStart + statusBarX, healthBarYStart + statusBarY, healthWidth, healthBarHeight);
+
+		g.setColor(Color.yellow);
+		g.fillRect(powerBarXStart + statusBarX, powerBarYStart + statusBarY, powerWidth, powerBarHeight);
 	}
 
 	private void updateAnimationTick() {
-
 		aniTick++;
 		if (aniTick >= aniSpeed) {
 			aniTick = 0;
@@ -197,6 +237,13 @@ public class Player extends Entity {
 				state = JUMP;
 			else
 				state = FALLING;
+		}
+
+		if (powerAttackActive) {
+			state = ATTACK;
+			aniIndex = 1;
+			aniTick = 0;
+			return;
 		}
 
 		if (attacking) {
@@ -241,11 +288,27 @@ public class Player extends Entity {
 			lastDir = true;
 		}
 
+		if (powerAttackActive) {
+			if (!left && !right) {
+				if (RIGHT == -1)
+					xSpeed = -walkSpeed;
+				else
+					xSpeed = walkSpeed;
+			}
+
+			xSpeed *= 3;
+		}
+
 		if (!inAir)
 			if (!IsEntityOnFloor(hitbox, lvlData))
 				inAir = true;
 
-		if (inAir) {
+		if (!inAir)
+			if (!powerAttackActive)
+				if ((!left && !right) || (right && left))
+					return;
+
+		if (inAir && !powerAttackActive) {
 			if (!CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
 				hitbox.y += airSpeed;
 				airSpeed += GRAVITY;
@@ -280,8 +343,14 @@ public class Player extends Entity {
 	private void updateXpos(float xSpeed) {
 		if (!CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData))
 			hitbox.x += xSpeed;
-		else
+		else {
 			hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
+			if (powerAttackActive) {
+				powerAttackActive = false;
+				powerAttackTick = 0;
+			}
+
+		}
 	}
 
 	public void changeHealth(int value) {
@@ -371,8 +440,21 @@ public class Player extends Entity {
 			attackBox.x = hitbox.x - hitbox.width + (int) (Game.SCALE * 15);
 	}
 
-	public void changePower(int bluePotionValue) {
-		System.out.println("changePower");
+	public void changePower(int value) {
+		powerValue += value;
+		if (powerValue >= powerMaxValue)
+			powerValue = powerMaxValue;
+		else if (powerValue <= 0)
+			powerValue = 0;
+	}
+
+	public void powerAttack() {
+		if (powerAttackActive)
+			return;
+		if (powerValue >= 60) {
+			powerAttackActive = true;
+			changePower(-60);
+		}
 	}
 
 }
