@@ -155,9 +155,8 @@ public class Playing extends State implements Statemethods {
 			if (e.getButton() == MouseEvent.BUTTON1) {
 				player.setAttacking(true);
 				attackTick++;
-				if (attackTick >= 12) {
+				if (attackTick >= 7) {
 					attackTick = 0;
-					lvlCompleted = true;
 				}
 			}
 
