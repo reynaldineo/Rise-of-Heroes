@@ -113,9 +113,9 @@ public class Playing extends State implements Statemethods {
 	}
 
 	public void loadNextLevel() {
-		resetAll();
 		levelManager.loadNextLevel();
 		player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
+		resetAll();
 		calcLvlOffset();
 	}
 
@@ -233,10 +233,10 @@ public class Playing extends State implements Statemethods {
 				case KeyEvent.VK_ESCAPE:
 					paused = !paused;
 					inventoryOpen = false;
-				break;
-				case KeyEvent.VK_I:
+					break;
+				case KeyEvent.VK_E:
 					inventoryOpen = !inventoryOpen;
-				break;
+					break;
 			}
 
 	}

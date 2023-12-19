@@ -65,6 +65,7 @@ public class Player extends Entity {
 
 	private void initAttackBox() {
 		attackBox = new Rectangle2D.Float(x, y, (int) (50 * Game.SCALE), (int) (40 * Game.SCALE));
+		resetAttackBox();
 	}
 
 	public void setSpawn(Point spawn) {
@@ -351,14 +352,23 @@ public class Player extends Entity {
 		inAir = false;
 		attacking = false;
 		moving = false;
+		airSpeed = 0f;
 		state = IDLE;
 		currentHealth = maxHealth;
 
 		hitbox.x = x;
 		hitbox.y = y;
+		resetAttackBox();
 
 		if (!IsEntityOnFloor(hitbox, lvlData))
 			inAir = true;
+	}
+
+	private void resetAttackBox() {
+		if (right)
+			attackBox.x = hitbox.x + hitbox.width - (int) (Game.SCALE * 15);
+		else if (left)
+			attackBox.x = hitbox.x - hitbox.width + (int) (Game.SCALE * 15);
 	}
 
 	public void changePower(int bluePotionValue) {

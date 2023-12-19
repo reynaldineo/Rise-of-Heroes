@@ -100,9 +100,10 @@ public class PausedOverlay {
             sfxButton.setMousePressed(true);
         else if (isIn(e, menuB))
             menuB.setMousePressed(true);
-        else if (isIn(e, replayB))
+        else if (isIn(e, replayB)) {
+            playing.resetAll();
             replayB.setMousePressed(true);
-        else if (isIn(e, unpauseB))
+        } else if (isIn(e, unpauseB))
             unpauseB.setMousePressed(true);
         else if (isIn(e, volumeButton))
             volumeButton.setMousePressed(true);
@@ -117,6 +118,7 @@ public class PausedOverlay {
                 sfxButton.setMuted(!sfxButton.isMuted());
         } else if (isIn(e, menuB)) {
             if (menuB.isMousePressed()) {
+                playing.resetAll();
                 Gamestate.state = Gamestate.MENU;
                 playing.unpauseGame();
             }
@@ -125,8 +127,8 @@ public class PausedOverlay {
                 System.out.println("replay lvl");
         } else if (isIn(e, unpauseB)) {
             if (unpauseB.isMousePressed()) {
-            	playing.unpauseGame();
-            	playing.setInventoryOpen(false);
+                playing.unpauseGame();
+                playing.setInventoryOpen(false);
             }
         }
 
@@ -161,7 +163,7 @@ public class PausedOverlay {
     }
 
     public void mouseDragged(MouseEvent e) {
-        if (volumeButton.isMousePressed()) 
+        if (volumeButton.isMousePressed())
             volumeButton.changeX(e.getX());
     }
 
